@@ -10,6 +10,7 @@ services:
      ports:
        - "1194:1194/udp"
        - "1194:1194/tcp"
+     env_file: .env  
      environment:
       #  - VIRTUAL_PORT=${VIRTUAL_PORT_OPENVPN}
       #  - VIRTUAL_HOST=${VIRTUAL_HOST_OPENVPN}
