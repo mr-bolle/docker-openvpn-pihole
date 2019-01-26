@@ -4,7 +4,7 @@ Changelog
 
 0.3 2019.01.27
 - openvpn-install.sh
-  - `.env` is not necessary (ServerIP check and change if different)
+  - `.env` is not necessary (change ServerIP and WEBPASSWORD into docker-compose.yml directly)
   - remove current Path
 
 0.2 2019.01.26
@@ -15,10 +15,6 @@ Changelog
   - read the Host-IP IPv4 to `.env` for Pi-Hole ServerIP
   - create a new sub-network if this not exist
   - run docker-compose.yml
-
-:zap: every time you run openvpn-install.sh it creates a new `.env` 
-
-WIP: Pi-Hole Container IP -- change docker-compose & create network
 
 0.1 2019.01.20
 ### Added
