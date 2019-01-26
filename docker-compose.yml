@@ -19,7 +19,7 @@ services:
       #  - OPENVPN_USERNAME=${OPENVPN_USERNAME}
       #  - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       # - LOCAL_NETWORK=192.168.0.0/24
-       - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60 -–log-driver json-file --log-opt max-size=10m
+       OPENVPN_OPTS: --inactive 3600 --ping 10 --ping-exit 60 -–log-driver json-file --log-opt max-size=10m
      volumes:
        - /etc/localtime:/etc/localtime:ro
        - /etc/timezone:/etc/timezone:ro
@@ -41,17 +41,17 @@ services:
        - NET_ADMIN     
      depends_on:
        - openvpn
-     #command: bash -c "export SERVERIP='ifconfig  | grep 'inet '| grep -v '127.0.0.1' | grep -v '172.'| cut -d: -f2 | awk '{ print $2}'"
      ports:
        #- "553:53/tcp"
        #- "553:53/udp"
        - "8081:80/tcp"
+     env_file: $DIR/.env  
      environment:
-       - WEBPASSWORD=fcvFjLIO2hWhkFCi
-       - ServerIP=192.168.178.XXX
-       - DNS1=127.0.0.1
-       - DNS2=1.1.1.1
-       - API_QUERY_LOG_SHOW=blockedonly        # pihole/setupVars.conf
+       WEBPASSWORD: fcvFjLIO2hWhkFCi
+       ServerIP: {SERVERIP}
+       DNS1: 127.0.0.1
+       DNS2: 1.1.1.1
+       API_QUERY_LOG_SHOW: blockedonly        # pihole/setupVars.conf
      volumes:
        - ./pihole:/etc/pihole
        - ./pihole_dnsmasq.d:/etc/dnsmasq.d

@@ -28,6 +28,10 @@ echo -e "\n$OVPN_DATA\n"
 export OVPN_DATA
 
 sleep 1
+
+echo -e "** Note: you can select the default [Value default] with hit enter **\n"
+
+# OpenVPN dynDNS Domain (ex vpn.example.com:443)
 read -p "Please enter your dynDNS Addess: " IP
 
 # VPN Protocol 
@@ -35,32 +39,63 @@ read -p "Please choose your Protocol (tcp / [udp])?: " PROTOCOL
     
     if [ "$PROTOCOL" != "tcp" ]; then
 
-        PROTOCOL="udp"   # set the default Protocol
+        PROTOCOL="udp"   # set the default Protocol 
         echo -e "\n  Your Domain is: $PROTOCOL://$IP \n"
     else
         echo -e "\n  Your Domain is: $PROTOCOL://$IP \n"
     fi
 
-# Pi-Hole Container
-read -p "Please enter the Pi-Hole Container IP [default 172.110.1.4]: " PIHOLEIP
-    PIHOLEIP=${PIHOLEIP:-'172.110.1.4'}   # set the default IP
+# # Pi-Hole Container IP
+##  Work in Progress
 
-    if [[ $PIHOLEIP =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-    echo -e "\n  This is a valid IP: $PIHOLEIP"
-    else
-        echo -e "\n*****************************************************\n"
-        echo -e "\n  This is a invalid IP: "$PIHOLEIP", please try again!"
-        echo -e "\n*****************************************************\n"
-        sleep 3 && exit
-    fi
+# read -p "Please enter the Pi-Hole Container IP [default 172.110.1.4]: " PIHOLEIP
+#     PIHOLEIP=${PIHOLEIP:-'172.110.1.4'}   # set the default IP (if user skip this entry)
+
+#     if [[ $PIHOLEIP =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+#     echo -e "\n  This is a valid IP: $PIHOLEIP"
+#     else
+#         echo -e "\n*****************************************************\n"
+#         echo -e "\n  This is a invalid IP: "$PIHOLEIP", please try again!"
+#         echo -e "\n*****************************************************\n"
+#         sleep 3 && exit
+#     fi
+
+# set the Pi-Hole Web Admin Password
+
+# read current PiHole Admin Password from docker-compose.yml
+PIHOLE_PASSWORD_OLD=`grep 'WEBPASSWORD' $DIR/docker-compose.yml | awk '{print $2}'`
+
+# Pi-Hole Web Admin Password
+read -p "Would you change the Pi-Hole Admin Password? [default $PIHOLE_PASSWORD_OLD]: " PIHOLE_PASSWORD_NEW
+    PIHOLE_PASSWORD_NEW=${PIHOLE_PASSWORD_NEW:-$PIHOLE_PASSWORD_OLD}   # set the default Password (if user skip this entry)
+
+#    echo "new: $PIHOLE_PASSWORD_NEW"
+#    echo "old: $PIHOLE_PASSWORD_OLD"
+
+    # change password
+            if [ "$PIHOLE_PASSWORD_NEW" != $PIHOLE_PASSWORD_OLD ]; then
+                sed -in "/WEBPASSWORD/s/$PIHOLE_PASSWORD_OLD/$PIHOLE_PASSWORD_NEW/g" $DIR/docker-compose.yml        # search for WEBPASSWORD and replace this Password
+                PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' $DIR/docker-compose.yml | awk '{print $2}'`
+            
+        echo -e "\n*****************************************************"
+        echo -e "\n  New Pi-Hole Password is set: $PIHOLE_PASSWORD_now  "
+        echo -e "\n*****************************************************"
+
+
+            else
+                # use default password
+                PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' $DIR/docker-compose.yml | awk '{print $2}'`
+                
+        echo -e "\n***********************************************************"
+        echo -e "\n  You don't change Pi-Hole Password: $PIHOLE_PASSWORD_now  "
+        echo -e "\n***********************************************************"             
+
+            fi
 
 #Step 2
 echo -e "\nStep 2\n"
 docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -n $PIHOLEIP -u $PROTOCOL://$IP 
 # more Option: https://github.com/kylemanna/docker-openvpn/blob/master/bin/ovpn_genconfig
-
-
-##*****###   finish for the first :)
 
 
 echo -e "\nAfter a Shortwhile You need to enter your Server Secure Password details please wait ...\n"
@@ -118,4 +153,28 @@ cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
 #END
 
 #To revoke a client or user 
-# docker run --volumes-from ovpn-data --rm -it kylemanna/openvpn ovpn_revokeclient 1234 remove﻿ 
+# docker run --volumes-from ovpn-data --rm -it kylemanna/openvpn ovpn_revokeclient 1234 remove
+
+# *******************************************************************************************************************
+
+##  create .env for docker-compose.yml
+
+# set the current Path
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+echo "OVPN_PiholePath=$DIR" > $DIR/.env         # create each run a new file !!
+
+# set the Host-IP for the Pi-Hole SERVERIP
+HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+
+echo -e "\nOVPN_PiholePath=$DIR"
+echo -e "SERVER_IP=$HostIP\n"
+
+echo "SERVER_IP=$HostIP" >> $DIR/.env
+
+
+# create a new sub-network (if not exist)
+docker network inspect vpn-net &>/dev/null || 
+    docker network create --driver=bridge --subnet=172.110.1.0/24 --gateway=172.110.1.1 vpn-net
+
+# run docker-compose
+docker-compose up -d -f $DIR/docker-compose.yml
