@@ -45,20 +45,24 @@ read -p "Please choose your Protocol (tcp / [udp])?: " PROTOCOL
         echo -e "\n  Your Domain is: $PROTOCOL://$IP \n"
     fi
 
-# # Pi-Hole Container IP
-##  Work in Progress
+# Pi-Hole Container IP
+#  Work in Progress - no adjstment possible
 
-# read -p "Please enter the Pi-Hole Container IP [default 172.110.1.4]: " PIHOLEIP
-#     PIHOLEIP=${PIHOLEIP:-'172.110.1.4'}   # set the default IP (if user skip this entry)
+read -p "Please enter the Pi-Hole Container IP [default 172.110.1.4]: " PIHOLEIP
+    PIHOLEIP=${PIHOLEIP:-'172.110.1.4'}   # set the default IP (if user skip this entry)
 
-#     if [[ $PIHOLEIP =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-#     echo -e "\n  This is a valid IP: $PIHOLEIP"
-#     else
-#         echo -e "\n*****************************************************\n"
-#         echo -e "\n  This is a invalid IP: "$PIHOLEIP", please try again!"
-#         echo -e "\n*****************************************************\n"
-#         sleep 3 && exit
-#     fi
+    if [[ $PIHOLEIP =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    echo -e "\n  This is a valid IP: $PIHOLEIP"
+    else
+        echo -e "\n*****************************************************\n"
+        echo -e "\n  This is a invalid IP: "$PIHOLEIP", please try again!"
+        echo -e "\n*****************************************************\n"
+        sleep 3 && exit
+    fi
+
+# set the current Path
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+echo "OVPN_PiholePath=$DIR" > $DIR/.env         # create each run a new file !!
 
 # set the Pi-Hole Web Admin Password
 
@@ -158,10 +162,6 @@ cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
 # *******************************************************************************************************************
 
 ##  create .env for docker-compose.yml
-
-# set the current Path
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-echo "OVPN_PiholePath=$DIR" > $DIR/.env         # create each run a new file !!
 
 # set the Host-IP for the Pi-Hole SERVERIP
 HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
