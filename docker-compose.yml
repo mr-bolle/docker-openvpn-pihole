@@ -46,10 +46,9 @@ services:
        #- "553:53/tcp"
        #- "553:53/udp"
        - "8081:80/tcp"
-     env_file: .env  
      environment:
        WEBPASSWORD: fcvFjLIO2hWhkFCi
-       ServerIP: ${SERVER_IP}
+       ServerIP: 0.0.0.0
        DNS1: 127.0.0.1
        DNS2: 1.1.1.1
        API_QUERY_LOG_SHOW: blockedonly        # pihole/setupVars.conf
