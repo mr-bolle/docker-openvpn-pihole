@@ -27,6 +27,7 @@ services:
      restart: always
      networks:
        vpn-net:
+         # openvpn_ipv4
          ipv4_address: 172.110.1.3
      logging:
        driver: "json-file"
@@ -48,7 +49,7 @@ services:
      env_file: $DIR/.env  
      environment:
        WEBPASSWORD: fcvFjLIO2hWhkFCi
-       ServerIP: {SERVERIP}
+       ServerIP: ${SERVERIP}:-HostIP
        DNS1: 127.0.0.1
        DNS2: 1.1.1.1
        API_QUERY_LOG_SHOW: blockedonly        # pihole/setupVars.conf
@@ -60,6 +61,7 @@ services:
      restart: always
      networks:
        vpn-net:
+         # pihole_ipv4
          ipv4_address: 172.110.1.4     
      logging:
        driver: "json-file"

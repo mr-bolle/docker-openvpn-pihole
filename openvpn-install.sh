@@ -18,10 +18,7 @@ echo -e "\nStep 1\n"
 sleep 1
 echo -e "\nPerforming Step 1, we are going to make a directory at /openvpn_data\n"
 
-mkdir -p $PWD/openvpn_data
-
-
-OVPN_DATA=$PWD/openvpn_data
+mkdir -p $PWD/openvpn_data && OVPN_DATA=$PWD/openvpn_data
 
 echo -e "\n$OVPN_DATA\n"
 
@@ -45,9 +42,32 @@ read -p "Please choose your Protocol (tcp / [udp])?: " PROTOCOL
         echo -e "\n  Your Domain is: $PROTOCOL://$IP \n"
     fi
 
-# Pi-Hole Container IP
+# Pi-Hole Host-IP set to docker-compose as ServerIP Envi
 #  Work in Progress - no adjstment possible
 
+# set the Host-IP for the Pi-Hole SERVERIP
+HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+echo "SERVER_IP=$HostIP" > .env         # create each run a new file
+
+    # change HostIP
+
+#    sed -r ServerIP/s/HostIP-PiHole/192.168.178.29/p docker-compose.yml
+
+            HostCompose=`grep ServerIP docker-compose.yml | awk '{ print $2 }'`
+        if [ -z $HostCompose != $HostIP]; then
+                # docker-compose Pihole Host not equal HostIP
+
+            else
+            
+        fi
+
+
+            # if [ "$PIHOLE_PASSWORD_NEW" != $PIHOLE_PASSWORD_OLD ]; then
+            #     sed -in "/WEBPASSWORD/s/$PIHOLE_PASSWORD_OLD/$PIHOLE_PASSWORD_NEW/g" docker-compose.yml        # search for WEBPASSWORD and replace this Password
+            #     PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
+
+
+# change Pi-Hole Container IP
 read -p "Please enter the Pi-Hole Container IP [default 172.110.1.4]: " PIHOLEIP
     PIHOLEIP=${PIHOLEIP:-'172.110.1.4'}   # set the default IP (if user skip this entry)
 
@@ -60,14 +80,13 @@ read -p "Please enter the Pi-Hole Container IP [default 172.110.1.4]: " PIHOLEIP
         sleep 3 && exit
     fi
 
-# set the current Path
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-echo "OVPN_PiholePath=$DIR" > $DIR/.env         # create each run a new file !!
+# change OpenVPN Container IP
+
 
 # set the Pi-Hole Web Admin Password
 
 # read current PiHole Admin Password from docker-compose.yml
-PIHOLE_PASSWORD_OLD=`grep 'WEBPASSWORD' $DIR/docker-compose.yml | awk '{print $2}'`
+PIHOLE_PASSWORD_OLD=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
 
 # Pi-Hole Web Admin Password
 read -p "Would you change the Pi-Hole Admin Password? [default $PIHOLE_PASSWORD_OLD]: " PIHOLE_PASSWORD_NEW
@@ -78,8 +97,8 @@ read -p "Would you change the Pi-Hole Admin Password? [default $PIHOLE_PASSWORD_
 
     # change password
             if [ "$PIHOLE_PASSWORD_NEW" != $PIHOLE_PASSWORD_OLD ]; then
-                sed -in "/WEBPASSWORD/s/$PIHOLE_PASSWORD_OLD/$PIHOLE_PASSWORD_NEW/g" $DIR/docker-compose.yml        # search for WEBPASSWORD and replace this Password
-                PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' $DIR/docker-compose.yml | awk '{print $2}'`
+                sed -in "/WEBPASSWORD/s/$PIHOLE_PASSWORD_OLD/$PIHOLE_PASSWORD_NEW/g" docker-compose.yml        # search for WEBPASSWORD and replace this Password
+                PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
             
         echo -e "\n*****************************************************"
         echo -e "\n  New Pi-Hole Password is set: $PIHOLE_PASSWORD_now  "
@@ -88,7 +107,7 @@ read -p "Would you change the Pi-Hole Admin Password? [default $PIHOLE_PASSWORD_
 
             else
                 # use default password
-                PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' $DIR/docker-compose.yml | awk '{print $2}'`
+                PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
                 
         echo -e "\n***********************************************************"
         echo -e "\n  You don't change Pi-Hole Password: $PIHOLE_PASSWORD_now  "
@@ -161,20 +180,12 @@ cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
 
 # *******************************************************************************************************************
 
-##  create .env for docker-compose.yml
-
-# set the Host-IP for the Pi-Hole SERVERIP
-HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
-
-echo -e "\nOVPN_PiholePath=$DIR"
-echo -e "SERVER_IP=$HostIP\n"
-
-echo "SERVER_IP=$HostIP" >> $DIR/.env
-
 
 # create a new sub-network (if not exist)
 docker network inspect vpn-net &>/dev/null || 
     docker network create --driver=bridge --subnet=172.110.1.0/24 --gateway=172.110.1.1 vpn-net
 
+# docker network ls|grep my_local_network > /dev/null || docker network create --driver bridge my_local_network
+
 # run docker-compose
-docker-compose up -d -f $DIR/docker-compose.yml
+docker-compose up -d -f docker-compose.yml
