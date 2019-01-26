@@ -14,11 +14,6 @@ GitHub @ [pi-hole/docker-pi-hole](https://github.com/pi-hole/docker-pi-hole/)
 git clone https://github.com/mr-bolle/docker-openvpn-pihole.git
 cd docker-openvpn-pihole
 ```
-~~#### 1.1. Edit docker-compose.yml from the pihole Service  
-`nano -c docker-compose.yml`  
-    * `WEBPASSWORD` pihole Admin Password (default fcvFjLIO2hWhkFCi)  
-    * `ServerIP` set the Host-Server IP  
-    * soon it will be possible over user input to adjust this environment~~
 
 #### 1.2. OpenVPN create certificate and first user [Source](https://github.com/kylemanna/docker-openvpn/blob/master/docs/docker-compose.md)
 
@@ -32,12 +27,3 @@ Follow User Entry you have to made
 5. `Common Name (eg: your user, host, or server name) [Easy-RSA CA]:` you can press ENTER (default Easy-RSA CA)
 6. `Please Provide Your Client Name` with this Name you create your first OpenVPN Client
 7. `Enter pass phrase for /etc/openvpn/pki/private/ca.key:` use the PEM password from ca.key from Point 4
-
-~~#### 1.3. Run docker-compose and set the DNS IP from Pi-Hole~~
-
-~~1. create a own network `docker network create --driver=bridge --subnet=172.110.1.0/24 --gateway=172.110.1.1 vpn-net`  
-2. run OpenVPN and Pi-Hole Container `docker compose up -d`~~
-  
-
-
-
