@@ -10,6 +10,7 @@ services:
      ports:
        - "1194:1194/udp"
        - "1194:1194/tcp"
+     env_file: .env  
      environment:
       #  - VIRTUAL_PORT=${VIRTUAL_PORT_OPENVPN}
       #  - VIRTUAL_HOST=${VIRTUAL_HOST_OPENVPN}
@@ -45,10 +46,10 @@ services:
        #- "553:53/tcp"
        #- "553:53/udp"
        - "8081:80/tcp"
-     env_file: $DIR/.env  
+     env_file: .env  
      environment:
        WEBPASSWORD: fcvFjLIO2hWhkFCi
-       ServerIP: {SERVERIP}
+       ServerIP: ${SERVER_IP}
        DNS1: 127.0.0.1
        DNS2: 1.1.1.1
        API_QUERY_LOG_SHOW: blockedonly        # pihole/setupVars.conf
