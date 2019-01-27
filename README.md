@@ -7,6 +7,9 @@ Many thanks to:
 GitHub @ [kylemanna/docker-openvpn](https://github.com/kylemanna/docker-openvpn/)  
 GitHub @ [pi-hole/docker-pi-hole](https://github.com/pi-hole/docker-pi-hole/)
 
+*YouTube: HowTo create this Container in about 4 Minutes*
+[![HowTo create this Container in about 4 Minutes](https://abload.de/img/screenshotcpjyo.jpg)](https://www.youtube.com/embed/8sRtCERYVzk)
+
 ### [Changelog](https://github.com/mr-bolle/docker-openvpn-pihole/blob/master/CHANGELOG.md)
 
 ### Install and use:
@@ -20,10 +23,10 @@ cd docker-openvpn-pihole
 `bash openvpn-install.sh`
 
 Follow User Entry you have to made
+:bulb: **All [default] values can be accepted with ENTER** :bulb:
 1. `Please enter your dynDNS Addess:` enter your dynDNS Domain (example: `vpn.example.com`)
 2. `Please choose your Protocol (tcp / [udp])` you can change the OpenVPN to tcp, default is udp
-3. `Please enter the Pi-Hole Container IP [default 172.110.1.4]` into docker-compose Service Pi-Hole you can set the static IP, this you can adjust or leave it as default
+3. `Would you change your Pi-Hole Admin Password` the currend default password read from docker-compose
 4. `Enter PEM pass phrase:` this password is for your ca.key - and you need this to create a User Certificate
-5. `Common Name (eg: your user, host, or server name) [Easy-RSA CA]:` you can press ENTER (default Easy-RSA CA)
+5. `Common Name (eg: your user, host, or server name) [Easy-RSA CA]:` (default Easy-RSA CA)
 6. `Please Provide Your Client Name` with this Name you create your first OpenVPN Client
-7. `Enter pass phrase for /etc/openvpn/pki/private/ca.key:` use the PEM password from ca.key from Point 4
