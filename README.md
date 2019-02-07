@@ -12,15 +12,13 @@ GitHub @ [pi-hole/docker-pi-hole](https://github.com/pi-hole/docker-pi-hole/)
 
 ### [Changelog](https://github.com/mr-bolle/docker-openvpn-pihole/blob/master/CHANGELOG.md)
 
-### Install and use:
+### 1.1. Download and run install Script:
 ```
 git clone https://github.com/mr-bolle/docker-openvpn-pihole.git
-cd docker-openvpn-pihole
+cd docker-openvpn-pihole && bash openvpn-install.sh
 ```
 
 #### 1.2. OpenVPN create certificate and first user [Source](https://github.com/kylemanna/docker-openvpn/blob/master/docs/docker-compose.md)
-
-`bash openvpn-install.sh`
 
 Follow User Entry you have to made
 :bulb: **All [default] values can be accepted with ENTER** :bulb:

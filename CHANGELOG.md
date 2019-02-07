@@ -2,6 +2,11 @@ Changelog
 
 :construction: Work in Progress - [see issue #1](https://github.com/mr-bolle/docker-openvpn-pihole/issues/1)
 
+0.4 2019.02.07
+- openvpn-install.sh
+  - clean up the user input
+  - after creating of the Container you get a overview with the OpenVPN Domain, Pi-Hole Password and Pi-Hole Admin Domain
+
 0.3 2019.01.27
 - openvpn-install.sh
   - `.env` is not necessary (change ServerIP and WEBPASSWORD into docker-compose.yml directly)

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Aurthor: Muhammad Asim
 # CoAuthor mr-bolle
 
@@ -13,35 +14,38 @@ echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by ky
 docker pull kylemanna/openvpn
 
 #Step 1
-
-echo -e "\nStep 1\n"
 sleep 1
+
 echo -e "\nPerforming Step 1, we are going to make a directory at /openvpn_data\n"
 
 mkdir -p $PWD/openvpn_data && OVPN_DATA=$PWD/openvpn_data
 
-echo -e "\n$OVPN_DATA\n"
+echo -e "** OpenVPN Data Path is set to: $OVPN_DATA  **\n"
 
 export OVPN_DATA
 
 sleep 1
 
 # OpenVPN dynDNS Domain (ex vpn.example.com:443)
-read -p "Please enter your dynDNS Addess: " IP
+read -p "Please enter your dynDNS Address:            " IP
 
 # VPN Protocol 
-read -p "Please choose your Protocol (tcp / [udp])?: " PROTOCOL
+read -p "Please choose your Protocol (tcp / [udp]):   " PROTOCOL
     
     if [ "$PROTOCOL" != "tcp" ]; then
 
         PROTOCOL="udp"   # set the default Protocol 
-        echo -e "\n  Your Domain is: $PROTOCOL://$IP \n"
+        # echo -e "\n***********************************************************"
+        # echo -e "\n * Your Domain is: $PROTOCOL://$IP *"
+        # echo -e "\n***********************************************************"
     else
-        echo -e "\n  Your Domain is: $PROTOCOL://$IP \n"
+        PROTOCOL="tcp"   # change Protocol to tcp
+        # echo -e "\n***********************************************************"
+        # echo -e "\n * Your Domain is: $PROTOCOL://$IP *"
+        # echo -e "\n***********************************************************"
     fi
 
 # Pi-Hole Host-IP set to docker-compose as ServerIP Environment
-
 # read current ServerIP
 HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
 
@@ -59,30 +63,28 @@ HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | 
 PIHOLE_PASSWORD_OLD=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
 
 # Pi-Hole Web Admin Password
-read -p "Would you change the Pi-Hole Admin Password? [default $PIHOLE_PASSWORD_OLD]: " PIHOLE_PASSWORD_NEW
+read -p "Please enter the Pi-Hole Container IP (default [$PIHOLE_PASSWORD_OLD]): " PIHOLE_PASSWORD_NEW
     PIHOLE_PASSWORD_NEW=${PIHOLE_PASSWORD_NEW:-$PIHOLE_PASSWORD_OLD}   # set the default Password (if user skip this entry)
 
 #    echo "new: $PIHOLE_PASSWORD_NEW"
 #    echo "old: $PIHOLE_PASSWORD_OLD"
 
-    # change password
             if [ "$PIHOLE_PASSWORD_NEW" != $PIHOLE_PASSWORD_OLD ]; then
+                # change password
                 sed -in "/WEBPASSWORD/s/$PIHOLE_PASSWORD_OLD/$PIHOLE_PASSWORD_NEW/g" docker-compose.yml        # search for WEBPASSWORD and replace this Password
                 PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
-            
-        echo -e "\n*****************************************************"
-        echo -e "\n  New Pi-Hole Password is set: $PIHOLE_PASSWORD_now  "
-        echo -e "\n*****************************************************"
-
-
+        
+        # echo -e "\n***********************************************************"
+        # echo -e "\n * New Pi-Hole Password is set: $PIHOLE_PASSWORD_now *"
+        # echo -e "\n***********************************************************"
+        
             else
                 # use default password
                 PIHOLE_PASSWORD_now=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
                 
-        echo -e "\n***********************************************************"
-        echo -e "\n  You don't change Pi-Hole Password: $PIHOLE_PASSWORD_now  "
-        echo -e "\n***********************************************************"             
-
+        # echo -e "\n***********************************************************"
+        # echo -e "\n * You don't change Pi-Hole Password: $PIHOLE_PASSWORD_now *"
+        # echo -e "\n***********************************************************"             
             fi
 
 
@@ -131,23 +133,21 @@ echo -e "\nAfter a Shortwhile You need to enter your Server Secure Password deta
 sleep 3
 
 echo -e "\nWe are now at Step 3\n"
-
 docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
 
-
-#Step 5
-echo -e "\nWe are now at 5th Step, Generate a client certificate with  a passphrase SAME AS YOU GIVE FOR SERVER...PASSPHRASE please wait...\n"
+#Step 4
+echo -e "\nWe are now at 4th Step, Generate a client certificate with  a passphrase SAME AS YOU GIVE FOR SERVER...PASSPHRASE please wait...\n"
 
 sleep 1
 read -p "Please Provide Your Client Name " CLIENTNAME
 
-echo -e "\nI am adding a client with name $CLIENTNAME\n"
+# echo -e "\nI am adding a client with name $CLIENTNAME\n"
  
 docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full $CLIENTNAME nopass
 
 
-#Step 6
-echo -e "\nWe are now at 6TH Step, don't worry this is last step, you lazy GUY,Now we retrieve the client configuration with embedded certificates\n"
+#Step 5
+echo -e "\nWe are now at 5TH Step, don't worry this is last step, you lazy GUY,Now we retrieve the client configuration with embedded certificates\n"
 
 echo -e "\n$CLIENTNAME ok\n"
 
@@ -155,6 +155,13 @@ docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLI
 
 cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
 
+
+# Show all values
+echo -e "\n ____________________________________________________________________________"
+echo -e "    Your VPN Domain is:                $PROTOCOL://$IP"
+echo -e "    Your Pi-Hole Password is set:      $PIHOLE_PASSWORD_now"
+echo -e "    Your Pi-Hole Admin Page is set to: http://$HostIP:8081/admin"
+echo -e "   ____________________________________________________________________________\n"
 
 #Note: If you remove the docker container by mistake, simply copy and paster 4TH Step, all will set as previously.
 
