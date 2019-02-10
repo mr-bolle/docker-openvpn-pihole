@@ -11,8 +11,14 @@ set -euo pipefail
 
 echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by kylemanna/openvpn\n"
 
-docker pull kylemanna/openvpn
+# build openvpn image if current device is a raspberry pi 2
+if ${uname -m} == 'armv7l' then;
+        docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
+    else
+        docker pull kylemanna/openvpn
+fi
 
+exit
 #Step 1
 sleep 1
 
