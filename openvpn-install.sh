@@ -11,7 +11,19 @@ set -euo pipefail
 
 echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by kylemanna/openvpn\n"
 
-docker pull kylemanna/openvpn
+# build openvpn image if current device is a ex. Raspberry Pi 2
+if [ `uname -m` != 'x86_64' ]; then
+        echo "Build a Docker Image from the kylemanna/openvpn repository"
+        # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
+            git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
+                # change alpine image
+                    sed -i "/FROM/s/latest/3.8/g" Dockerfile
+                    docker build --no-cache -t kylemanna/openvpn .
+                cd .. && rm -f -r docker-openvpn    
+    else
+        docker pull kylemanna/openvpn
+fi
+
 
 #Step 1
 sleep 1

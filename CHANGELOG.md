@@ -2,6 +2,10 @@ Changelog
 
 :construction: Work in Progress - [see issue #1](https://github.com/mr-bolle/docker-openvpn-pihole/issues/1)
 
+0.5 2019.02.10
+- openvpn-install.sh
+  - build a image if you use a ARM Device (ex. Raspberry Pi 2) with alpine 3.8 [deepsidhu1313 issue 437](https://github.com/kylemanna/docker-openvpn/issues/437#issuecomment-460019016)
+
 0.4 2019.02.07
 - openvpn-install.sh
   - clean up the user input
