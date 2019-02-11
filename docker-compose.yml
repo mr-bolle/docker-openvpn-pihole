@@ -39,6 +39,9 @@ services:
      container_name: vpn_pihole
      cap_add:
        - NET_ADMIN     
+     dns:
+       - 127.0.0.1
+       - 1.1.1.1
      depends_on:
        - openvpn
      ports:
@@ -48,14 +51,15 @@ services:
      environment:
        WEBPASSWORD: fcvFjLIO2hWhkFCi
        ServerIP: 0.0.0.0
-       DNS1: 127.0.0.1
-       DNS2: 1.1.1.1
+       DNS1: 208.67.222.222
+       DNS2: 1.0.0.1
        API_QUERY_LOG_SHOW: blockedonly        # pihole/setupVars.conf
      volumes:
        - ./pihole:/etc/pihole
        - ./pihole_dnsmasq.d:/etc/dnsmasq.d
        - /etc/localtime:/etc/localtime:ro
        - /etc/timezone:/etc/timezone:ro
+       - ./fix/pihole_overwrite_resolv.conf:/etc/resolv.conf   # issue nameserver 127.0.0.11 https://github.com/pi-hole/docker-pi-hole/issues/410#
      restart: always
      networks:
        vpn-net:

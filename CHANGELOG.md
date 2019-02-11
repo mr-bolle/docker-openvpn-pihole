@@ -2,6 +2,10 @@ Changelog
 
 :construction: Work in Progress - [see issue #1](https://github.com/mr-bolle/docker-openvpn-pihole/issues/1)
 
+0.6 2019.02.11
+- fix pihole resolv.conf [#410](https://github.com/pi-hole/docker-pi-hole/issues/410)
+- fix pihole dns environment
+
 0.5 2019.02.10
 - openvpn-install.sh
   - build a image if you use a ARM Device (ex. Raspberry Pi 2) with alpine 3.8 [deepsidhu1313 issue 437](https://github.com/kylemanna/docker-openvpn/issues/437#issuecomment-460019016)
