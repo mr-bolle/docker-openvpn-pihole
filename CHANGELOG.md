@@ -2,6 +2,14 @@ Changelog
 
 :construction: Work in Progress - [see issue #1](https://github.com/mr-bolle/docker-openvpn-pihole/issues/1)
 
+0.7 2019.02.17
+- openvpn-install.sh
+  - set "DNSSEC=true" to pihole/setupVars.conf
+  - set "API_QUERY_LOG_SHOW=blockedonly" to pihole/setupVars.conf
+
+- docker-compose.yml
+  - change DNS1=46.182.19.48 Digitalcourage and DNS2=213.73.91.35 Chaos Computer Club (this DNS support DNS)
+
 0.6 2019.02.11
 - fix pihole resolv.conf [#410](https://github.com/pi-hole/docker-pi-hole/issues/410)
 - fix pihole dns environment

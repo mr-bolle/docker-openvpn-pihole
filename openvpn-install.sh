@@ -189,5 +189,9 @@ echo -e "   ____________________________________________________________________
 docker network inspect vpn-net &>/dev/null || 
     docker network create --driver=bridge --subnet=172.110.1.0/24 --gateway=172.110.1.1 vpn-net
 
+# set DNSSEC=true to pihole/setupVars.conf 
+mkdir -p pihole && echo "DNSSEC=true" >> pihole/setupVars.conf
+echo "API_QUERY_LOG_SHOW=blockedonly" >> pihole/setupVars.conf
+
 # run docker-compose
 docker-compose up -d

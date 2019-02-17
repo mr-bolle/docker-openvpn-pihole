@@ -51,9 +51,9 @@ services:
      environment:
        WEBPASSWORD: fcvFjLIO2hWhkFCi
        ServerIP: 0.0.0.0
-       DNS1: 208.67.222.222
-       DNS2: 1.0.0.1
-       API_QUERY_LOG_SHOW: blockedonly        # pihole/setupVars.conf
+# #1 Digitalcourage | #2 Chaos Computer Club
+       DNS1: 46.182.19.48
+       DNS2: 213.73.91.35
      volumes:
        - ./pihole:/etc/pihole
        - ./pihole_dnsmasq.d:/etc/dnsmasq.d
