@@ -8,7 +8,7 @@ Changelog
   - set "API_QUERY_LOG_SHOW=blockedonly" to pihole/setupVars.conf
 
 - docker-compose.yml
-  - change DNS1=46.182.19.48 Digitalcourage and DNS2=213.73.91.35 Chaos Computer Club (this DNS support DNS)
+  - change DNS1=46.182.19.48 Digitalcourage and DNS2=213.73.91.35 Chaos Computer Club (this support DNSSecure check this with [DNSSEC Resolver Test](http://dnssec.vs.uni-due.de/))
 
 0.6 2019.02.11
 - fix pihole resolv.conf [#410](https://github.com/pi-hole/docker-pi-hole/issues/410)
