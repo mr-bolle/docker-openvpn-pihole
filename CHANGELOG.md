@@ -2,6 +2,14 @@ Changelog
 
 :construction: Work in Progress - [see issue #1](https://github.com/mr-bolle/docker-openvpn-pihole/issues/1)
 
+0.8 2019.02.17
+- [Upgrade to Pihole 4.2.2](https://github.com/pi-hole/docker-pi-hole/pull/426)
+- openvpn-install.sh
+  - remove ServerIP adjustment in docker-compose.yml
+- docker-compose.yml
+  - remove `ServerIP`
+  - remove fix from issue `nameserver 127.0.0.11` pi-hole/docker-pi-hole#410
+
 0.7 2019.02.17
 - openvpn-install.sh
   - set "DNSSEC=true" to pihole/setupVars.conf
