@@ -57,18 +57,6 @@ read -p "Please choose your Protocol (tcp / [udp]):   " PROTOCOL
         # echo -e "\n***********************************************************"
     fi
 
-# Pi-Hole Host-IP set to docker-compose as ServerIP Environment
-# read current ServerIP
-HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
-
-    # change HostIP
-    HostIP_OLD=`grep 'ServerIP' docker-compose.yml | awk '{print $2}'`
-        if [ $HostIP_OLD != $HostIP ]; then
-                # docker-compose Pihole ServerIP not equal HostIP
-                sed -in "/ServerIP/s/$HostIP_OLD/$HostIP/g" docker-compose.yml        # search for ServerIP and replace HostIP
-            #else
-                #echo "HostIP same, change is not necessary"
-        fi
 
 # set the Pi-Hole Web Admin Password
 # read current PiHole Admin Password from docker-compose.yml
@@ -98,36 +86,6 @@ read -p "Please enter the Pi-Hole Container IP (default [$PIHOLE_PASSWORD_OLD]):
         # echo -e "\n * You don't change Pi-Hole Password: $PIHOLE_PASSWORD_now *"
         # echo -e "\n***********************************************************"             
             fi
-
-
-# Pi-Hole & OpenVPN Container IP set to docker-compose
-
-# # read current Container IP
-
-##  ** stop this idea  **
-#     OpenVPN_IP_OLD=`grep 'ipv4' docker-compose.yml | awk ' NR==1 {print $2}'`      # first IPv4
-#     OpenVPN_IP_OLD_LINE=`grep --line-number 'ipv4' docker-compose.yml | awk ' NR==1 {print $1}' |  sed 's/[^0-9]*//g'`  # first result from ipv4 return linenumber (without :)
-
-#     PIHOLE_IP_OLD=`grep 'ipv4' docker-compose.yml | awk ' NR==2 {print $2}'`       # secont IPv4
-#     PIHOLE_IP_OLD_LINE=`grep --line-number 'ipv4' docker-compose.yml | awk ' NR==2 {print $1}' | sed 's/[^0-9]*//g'`  # first result from ipv4 return linenumber (without :)
-
-# read -p "Please enter the Pi-Hole Container IP [default $PIHOLE_IP_OLD]: " PIHOLE_IP
-#     PIHOLE_IP=${PIHOLE_IP:-$PIHOLE_IP_OLD}   # set the default IP (if user skip this entry)
-
-#     if [[ $PIHOLE_IP != ^[10|172|192].[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-#    # if [[ $PIHOLE_IP != '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' ]]; then
-#     #    echo -e "\n  This is a valid IP: $PIHOLE_IP  Line: $PIHOLE_IP_OLD_LINE $PIHOLE_IP"
-
-#         sed -in "${PIHOLE_IP_OLD_LINE}s/${PIHOLE_IP_OLD}/${PIHOLE_IP}/g" docker-compose.yml  # replace replacing-string-based-on-line-number
-#         echo `grep 'ipv4' docker-compose.yml | awk ' NR==2 {print $2} '`
-
-# #        sed -in "/ServerIP/s/$HostIP_OLD/$HostIP/g" docker-compose.yml
-#     else
-#         echo -e "\n*****************************************************\n"
-#         echo -e "\n  This is a invalid IP: "$PIHOLE_IP", please try again!"
-#         echo -e "\n*****************************************************\n"
-#         sleep 3 && exit
-#     fi
 
 
 #Step 2
@@ -167,6 +125,8 @@ docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLI
 
 cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
 
+# read current ServerIP
+HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
 
 # Show all values
 echo -e "\n ____________________________________________________________________________"

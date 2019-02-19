@@ -50,7 +50,6 @@ services:
        - "8081:80/tcp"
      environment:
        WEBPASSWORD: fcvFjLIO2hWhkFCi
-       ServerIP: 0.0.0.0
 # #1 Digitalcourage | #2 Chaos Computer Club
        DNS1: 46.182.19.48
        DNS2: 213.73.91.35
@@ -59,7 +58,6 @@ services:
        - ./pihole_dnsmasq.d:/etc/dnsmasq.d
        - /etc/localtime:/etc/localtime:ro
        - /etc/timezone:/etc/timezone:ro
-       - ./fix/pihole_overwrite_resolv.conf:/etc/resolv.conf   # issue nameserver 127.0.0.11 https://github.com/pi-hole/docker-pi-hole/issues/410#
      restart: always
      networks:
        vpn-net:
