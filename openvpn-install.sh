@@ -63,7 +63,7 @@ read -p "Please choose your Protocol (tcp / [udp]):   " PROTOCOL
 PIHOLE_PASSWORD_OLD=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
 
 # Pi-Hole Web Admin Password
-read -p "Please enter the Pi-Hole Container IP (default [$PIHOLE_PASSWORD_OLD]): " PIHOLE_PASSWORD_NEW
+read -p "Please enter the Pi-Hole Admin Password (default [$PIHOLE_PASSWORD_OLD]): " PIHOLE_PASSWORD_NEW
     PIHOLE_PASSWORD_NEW=${PIHOLE_PASSWORD_NEW:-$PIHOLE_PASSWORD_OLD}   # set the default Password (if user skip this entry)
 
 #    echo "new: $PIHOLE_PASSWORD_NEW"
