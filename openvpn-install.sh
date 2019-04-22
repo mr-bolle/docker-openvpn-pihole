@@ -121,9 +121,7 @@ echo -e "\nWe are now at 5TH Step, don't worry this is last step, you lazy GUY,N
 
 echo -e "\n$CLIENTNAME ok\n"
 
-docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLIENTNAME > $CLIENTNAME.ovpn
-
-cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
+docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLIENTNAME > $OVPN_DATA/$CLIENTNAME.ovpn
 
 # read current ServerIP
 # TODO: This will fail on MacOS, no `ip` command
