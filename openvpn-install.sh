@@ -126,7 +126,9 @@ docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLI
 cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
 
 # read current ServerIP
-HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+# TODO: This will fail on MacOS, no `ip` command
+# HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+HostIP=$(wget -qO- 'https://api.ipify.org?format=text')
 
 # Show all values
 echo -e "\n ____________________________________________________________________________"
