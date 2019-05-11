@@ -124,9 +124,15 @@ echo -e "\n$CLIENTNAME ok\n"
 docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLIENTNAME > $OVPN_DATA/$CLIENTNAME.ovpn
 
 # read current ServerIP
-# TODO: This will fail on MacOS, no `ip` command
 # HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
-HostIP=$(wget -qO- 'https://api.ipify.org?format=text')
+# TODO: This will fail on MacOS, no `ip` command
+if hostname -I | awk '{print $1}' ; then
+    # read IP with Linux Host
+    HostIP=`hostname -I | awk '{print $1}'`
+else
+    # read IP with MacOS Host
+    HostIP=`ipconfig getifaddr en0`
+fi
 
 # Show all values
 echo -e "\n ____________________________________________________________________________"
