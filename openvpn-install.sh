@@ -63,7 +63,7 @@ read -p "Please choose your Protocol (tcp / [udp]):   " PROTOCOL
 PIHOLE_PASSWORD_OLD=`grep 'WEBPASSWORD' docker-compose.yml | awk '{print $2}'`
 
 # Pi-Hole Web Admin Password
-read -p "Please enter the Pi-Hole Container IP (default [$PIHOLE_PASSWORD_OLD]): " PIHOLE_PASSWORD_NEW
+read -p "Please enter the Pi-Hole Admin Password (default [$PIHOLE_PASSWORD_OLD]): " PIHOLE_PASSWORD_NEW
     PIHOLE_PASSWORD_NEW=${PIHOLE_PASSWORD_NEW:-$PIHOLE_PASSWORD_OLD}   # set the default Password (if user skip this entry)
 
 #    echo "new: $PIHOLE_PASSWORD_NEW"
@@ -121,12 +121,18 @@ echo -e "\nWe are now at 5TH Step, don't worry this is last step, you lazy GUY,N
 
 echo -e "\n$CLIENTNAME ok\n"
 
-docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLIENTNAME > $CLIENTNAME.ovpn
-
-cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
+docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLIENTNAME > $OVPN_DATA/$CLIENTNAME.ovpn
 
 # read current ServerIP
-HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+# HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+# TODO: This will fail on MacOS, no `ip` command
+if hostname -I | awk '{print $1}' ; then
+    # read IP with Linux Host
+    HostIP=`hostname -I | awk '{print $1}'`
+else
+    # read IP with MacOS Host
+    HostIP=`ipconfig getifaddr en0`
+fi
 
 # Show all values
 echo -e "\n ____________________________________________________________________________"
