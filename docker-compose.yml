@@ -55,7 +55,7 @@ services:
        DNS2: 213.73.91.35
      volumes:
        - ./pihole:/etc/pihole
-       - ./pihole_dnsmasq.d:/etc/dnsmasq.d
+       - ./pihole/dnsmasq.d:/etc/dnsmasq.d
        - /etc/localtime:/etc/localtime:ro
        - /etc/timezone:/etc/timezone:ro
      restart: always
