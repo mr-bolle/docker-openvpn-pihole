@@ -4,7 +4,7 @@ Changelog
 
 0.9 2019.06.02
 - [CVE-2019-5021](https://www.zdnet.com/article/alpine-linux-docker-images-ship-a-root-account-with-no-password/) fix Alpine image `root account without password` for Raspberry Pi Devices (now use the Image `arm32v7/alpine:latest`)
-- add `.gitignore` and fix issue with command `ip` #PR8 thanks @darth-veitcher
+- add `.gitignore` and fix issue with command `ip` with MacOS Host [#PullRequest_8](https://github.com/mr-bolle/docker-openvpn-pihole/pull/8) thanks @darth-veitcher
 
 0.8 2019.02.17
 - [Upgrade to Pihole 4.2.2](https://github.com/pi-hole/docker-pi-hole/pull/426)
