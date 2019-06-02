@@ -11,18 +11,21 @@ set -euo pipefail
 
 echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by kylemanna/openvpn\n"
 
-# build openvpn image if current device is a ex. Raspberry Pi 2
-if [ `uname -m` != 'x86_64' ]; then
-        echo "Build a Docker Image from the kylemanna/openvpn repository"
-        # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
-            git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
-                # change alpine image
-                    sed -i "/FROM/s/latest/3.8/g" Dockerfile
-                    docker build --no-cache -t kylemanna/openvpn .
-                cd .. && rm -f -r docker-openvpn    
-    else
-        docker pull kylemanna/openvpn
-fi
+ if [ `uname -m` != 'x86_64' ]; then
+         echo "** Build a Docker Image from the kylemanna/openvpn repository **"
+         # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
+             git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
+                 # change alpine image
+#                     sed -i "/FROM/s/latest/3.8/g" Dockerfile
+                      sed -i "/FROM/s/aarch64/arm32v7/g" Dockerfile.aarch64
+                      sed -i "/FROM/s/latest/alpine/g" Dockerfile.aarch64
+                      sed -i "/FROM/s/3.5/latest/g" Dockerfile.aarch64
+                      docker build --no-cache -t kylemanna/openvpn -f Dockerfile.aarch64 .
+                 cd .. && rm -f -r docker-openvpn
+     else
+         echo "** Pull the Docker Image from kylemanna/openvpn repository **"
+         docker pull kylemanna/openvpn
+ fi
 
 
 #Step 1
@@ -121,12 +124,18 @@ echo -e "\nWe are now at 5TH Step, don't worry this is last step, you lazy GUY,N
 
 echo -e "\n$CLIENTNAME ok\n"
 
-docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLIENTNAME > $CLIENTNAME.ovpn
-
-cp $PWD/$CLIENTNAME.ovpn $OVPN_DATA
+docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $CLIENTNAME > $OVPN_DATA/$CLIENTNAME.ovpn
 
 # read current ServerIP
-HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+# HostIP=`ip -4 addr show scope global dev eth0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+# TODO: This will fail on MacOS, no `ip` command
+if hostname -I | awk '{print $1}' ; then
+    # read IP with Linux Host
+    HostIP=`hostname -I | awk '{print $1}'`
+else
+    # read IP with MacOS Host
+    HostIP=`ipconfig getifaddr en0`
+fi
 
 # Show all values
 echo -e "\n ____________________________________________________________________________"
