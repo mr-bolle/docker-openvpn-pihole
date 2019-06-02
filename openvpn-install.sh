@@ -12,7 +12,7 @@ set -euo pipefail
 echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by kylemanna/openvpn\n"
 
  if [ `uname -m` != 'x86_64' ]; then
-         echo "** Build a Docker Image from the kylemanna/openvpn repository **\n"
+         echo "** Build a Docker Image from the kylemanna/openvpn repository **"
          # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
              git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
                  # change alpine image
@@ -23,7 +23,7 @@ echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by ky
                       docker build --no-cache -t kylemanna/openvpn -f Dockerfile.aarch64 .
                  cd .. && rm -f -r docker-openvpn
      else
-         echo "** Pull the Docker Image from kylemanna/openvpn repository **\n"
+         echo "** Pull the Docker Image from kylemanna/openvpn repository **"
          docker pull kylemanna/openvpn
  fi
 
