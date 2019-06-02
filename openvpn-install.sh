@@ -11,21 +11,21 @@ set -euo pipefail
 
 echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by kylemanna/openvpn\n"
 
-# build openvpn image if current device is a ex. Raspberry Pi 2
-
-## Note no custom image necessary
-
-# if [ `uname -m` != 'x86_64' ]; then
-#         echo "Build a Docker Image from the kylemanna/openvpn repository"
-#         # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
-#             git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
-#                 # change alpine image
+ if [ `uname -m` != 'x86_64' ]; then
+         echo "** Build a Docker Image from the kylemanna/openvpn repository **\n"
+         # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
+             git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
+                 # change alpine image
 #                     sed -i "/FROM/s/latest/3.8/g" Dockerfile
-#                     docker build --no-cache -t kylemanna/openvpn .
-#                 cd .. && rm -f -r docker-openvpn    
-#     else
+                      sed -i "/FROM/s/aarch64/arm32v7/g" Dockerfile.aarch64
+                      sed -i "/FROM/s/latest/alpine/g" Dockerfile.aarch64
+                      sed -i "/FROM/s/3.5/latest/g" Dockerfile.aarch64
+                      docker build --no-cache -t kylemanna/openvpn -f Dockerfile.aarch64 .
+                 cd .. && rm -f -r docker-openvpn
+     else
+         echo "** Pull the Docker Image from kylemanna/openvpn repository **\n"
          docker pull kylemanna/openvpn
-# fi
+ fi
 
 
 #Step 1
