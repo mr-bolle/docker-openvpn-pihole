@@ -14,20 +14,24 @@ echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by ky
  if [ `uname -m` != 'x86_64' ]; then
          echo "** Build a Docker Image from the kylemanna/openvpn repository **"
          # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
-             git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
-                 # change alpine image
-#                     sed -i "/FROM/s/latest/3.8/g" Dockerfile
-                      sed -i "/FROM/s/aarch64/arm32v7/g" Dockerfile.aarch64
-                      sed -i "/FROM/s/latest/alpine/g" Dockerfile.aarch64
-                      sed -i "/FROM/s/3.5/latest/g" Dockerfile.aarch64
-                      docker build --no-cache -t kylemanna/openvpn -f Dockerfile.aarch64 .
+         git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
+                
+                # create a copy with the current architecture
+                DOCKERFILE_CUSTOM=Dockerfile.`uname -m`
+                cp Dockerfile.aarch64 $DOCKERFILE_CUSTOM     
+
+                    # Upgrade Alpine Image for OpenVPN 
+                    IMAGE_LINE=`cat -n $DOCKERFILE_CUSTOM | grep FROM |  awk '{print $1}'`	 # search line with the old Image
+                    sed -i ${IMAGE_LINE}d $DOCKERFILE_CUSTOM				                            # delete this old Image
+                    sed -i "${IMAGE_LINE}a\FROM alpine:3.8.4" $DOCKERFILE_CUSTOM            # append new Image
+
+                    docker build --no-cache -t kylemanna/openvpn -f $DOCKERFILE_CUSTOM .
                  cd .. && rm -f -r docker-openvpn
      else
          echo "** Pull the Docker Image from kylemanna/openvpn repository **"
          docker pull kylemanna/openvpn
  fi
-
-
+ 
 #Step 1
 sleep 1
 
