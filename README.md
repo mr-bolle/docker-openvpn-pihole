@@ -7,12 +7,12 @@ Many thanks to:
 GitHub @ [kylemanna/docker-openvpn](https://github.com/kylemanna/docker-openvpn/)  
 GitHub @ [pi-hole/docker-pi-hole](https://github.com/pi-hole/docker-pi-hole/)
 
-Now you can use this repository with the Hardwaretype x86_x64 and amr (Test with Raspberry Pi 2)
+Now you can use this repository with the Hardwaretype x86_x64 and amr (Test with **Raspberry Pi 2 (armhf) & Rasperry Pi Zero W (armv6))**
 
 *YouTube: HowTo create this Container in about 4 Minutes*
 [![HowTo create this Container in about 4 Minutes](https://abload.de/img/screenshotcpjyo.jpg)](https://www.youtube.com/embed/8sRtCERYVzk)
 
-### [Changelog](https://github.com/mr-bolle/docker-openvpn-pihole/blob/master/CHANGELOG.md)
+### :newspaper: [Changelog](https://github.com/mr-bolle/docker-openvpn-pihole/blob/master/CHANGELOG.md)
 
 ### 1.1. Download and run install Script:
 ```
