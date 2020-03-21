@@ -1,4 +1,4 @@
 # Ignore locally created data
 openvpn_data/
 pihole/
-.images/
+/.images/
