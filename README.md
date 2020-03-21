@@ -14,6 +14,24 @@ Now you can use this repository with the Hardwaretype x86_x64 and amr (Test with
 
 ### :newspaper: [Changelog](https://github.com/mr-bolle/docker-openvpn-pihole/blob/master/CHANGELOG.md)
 
+### 1.0. Preparation
+* Docker: [Install Docer](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository)
+
+```
+curl -sSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+docker --version
+```
+
+* Docker-Compose: [Install Docker Compose](https://docs.docker.com/compose/install/#install-compose)  
+https://github.com/docker/compose/releases/latest
+
+* Router Port Forwarding [Howto Forward a Port on any Router](https://portforward.com/router.htm)  
+Setup a Port Forwarding from the external Port *1194* to the Host-Port *1194*
+
+![OpenVPN Pi-Hole Network Map](images/OpenVPN%20Pi-Hole%20Network.png)
+
+
 ### 1.1. Download and run install Script:
 ```
 git clone https://github.com/mr-bolle/docker-openvpn-pihole.git
