@@ -9,29 +9,34 @@
 
 set -euo pipefail
 
-echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by kylemanna/openvpn\n"
+echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by mr-bolle/docker-openvpn-arm\n"
 
- if [ `uname -m` != 'x86_64' ]; then
-         echo "** Build a Docker Image from the kylemanna/openvpn repository **"
-         # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
-         git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
-                
-                # create a copy with the current architecture
-                DOCKERFILE_CUSTOM=Dockerfile.`uname -m`
-                cp Dockerfile.aarch64 $DOCKERFILE_CUSTOM     
+# if [ `uname -m` != 'x86_64' ]; then
+#         echo "** Build a Docker Image from the kylemanna/openvpn repository **"
+#         # docker build -t kylemanna/openvpn https://github.com/kylemanna/docker-openvpn.git
+#         git clone https://github.com/kylemanna/docker-openvpn.git && cd docker-openvpn
+#                
+#                # create a copy with the current architecture
+#                DOCKERFILE_CUSTOM=Dockerfile.`uname -m`
+#                cp Dockerfile.aarch64 $DOCKERFILE_CUSTOM     
+#
+#                    # Upgrade Alpine Image for OpenVPN 
+#                    IMAGE_LINE=`cat -n $DOCKERFILE_CUSTOM | grep FROM |  awk '{print $1}'`	 # search line with the old Image
+#                    sed -i ${IMAGE_LINE}d $DOCKERFILE_CUSTOM				                            # delete this old Image
+#                    sed -i "${IMAGE_LINE}a\FROM alpine:3.8.4" $DOCKERFILE_CUSTOM            # append new Image
+#
+#                    docker build --no-cache -t kylemanna/openvpn -f $DOCKERFILE_CUSTOM .
+#                 cd .. && rm -f -r docker-openvpn
+#     else
+#         echo "** Pull the Docker Image from kylemanna/openvpn repository **"
+#         docker pull kylemanna/openvpn
+# fi
 
-                    # Upgrade Alpine Image for OpenVPN 
-                    IMAGE_LINE=`cat -n $DOCKERFILE_CUSTOM | grep FROM |  awk '{print $1}'`	 # search line with the old Image
-                    sed -i ${IMAGE_LINE}d $DOCKERFILE_CUSTOM				                            # delete this old Image
-                    sed -i "${IMAGE_LINE}a\FROM alpine:3.8.4" $DOCKERFILE_CUSTOM            # append new Image
+    git clone https://github.com/mr-bolle/docker-openvpn-arm.git && cd docker-openvpn-arm
+        docker build --no-cache -t kylemanna/openvpn  .
+        cd ..
 
-                    docker build --no-cache -t kylemanna/openvpn -f $DOCKERFILE_CUSTOM .
-                 cd .. && rm -f -r docker-openvpn
-     else
-         echo "** Pull the Docker Image from kylemanna/openvpn repository **"
-         docker pull kylemanna/openvpn
- fi
- 
+
 #Step 1
 sleep 1
 
