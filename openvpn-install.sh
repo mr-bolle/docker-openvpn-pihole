@@ -18,9 +18,12 @@ echo -e "\nWe we are pulling the best Image of OpenVPN for docker on earth by ky
                 
                 # create a copy with the current architecture
                 DOCKERFILE_CUSTOM=Dockerfile.`uname -m`
-                cp Dockerfile.aarch64 $DOCKERFILE_CUSTOM     
-
-                    # Upgrade Alpine Image for OpenVPN 
+                
+                if [ `uname -m` != 'aarch64' ]; then
+                   cp Dockerfile.aarch64 $DOCKERFILE_CUSTOM     
+                fi
+                
+                # Upgrade Alpine Image for OpenVPN 
                     IMAGE_LINE=`cat -n $DOCKERFILE_CUSTOM | grep FROM |  awk '{print $1}'`	 # search line with the old Image
                     sed -i ${IMAGE_LINE}d $DOCKERFILE_CUSTOM				                            # delete this old Image
                     sed -i "${IMAGE_LINE}a\FROM alpine:3.8.4" $DOCKERFILE_CUSTOM            # append new Image
